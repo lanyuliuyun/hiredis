@@ -202,6 +202,7 @@ static void __redisSetErrorFromErrno(redisContext *c, int type, const char *pref
     __redisSetError(c,type,buf);
 }
 	
+#if 0
 static int redisSetReuseAddr(redisContext *c) 
 {
     int value = 1;
@@ -214,6 +215,7 @@ static int redisSetReuseAddr(redisContext *c)
 
     return REDIS_OK;
 }
+#endif
 
 static int redisSetBlocking(redisContext *c, int blocking) {
     unsigned long value = blocking ? 1 : 0;
@@ -309,18 +311,14 @@ static int redisContextWaitReady(redisContext *c, const struct timeval *timeout)
         return REDIS_OK;
     }
   #else
-	if (errno == EINPROGRESS) 
-	{
+	if (errno == EINPROGRESS) 	{
         int res;
 
-        if ((res = poll(wfd, 1, msec)) == -1) 
-		{
+        if ((res = poll(wfd, 1, msec)) == -1) 		{
             __redisSetErrorFromErrno(c, REDIS_ERR_IO, "poll(2)");
             redisContextCloseFd(c);
             return REDIS_ERR;
-        } 
-		else if (res == 0) 
-		{
+        } else if (res == 0) {
             errno = ETIMEDOUT;
             __redisSetErrorFromErrno(c,REDIS_ERR_IO,NULL);
             redisContextCloseFd(c);
@@ -328,9 +326,7 @@ static int redisContextWaitReady(redisContext *c, const struct timeval *timeout)
         }
 
         if (redisCheckSocketError(c) != REDIS_OK)
-		{
-			return REDIS_ERR;
-		}
+            return REDIS_ERR;
 
         return REDIS_OK;
     }
@@ -364,6 +360,8 @@ int redisCheckSocketError(redisContext *c) {
     if (err) {
 	  #ifndef __WINNT__
         errno = err;
+	  #else
+	    WSASetLastError(err);
 	  #endif
         __redisSetErrorFromErrno(c,REDIS_ERR_IO,NULL);
         return REDIS_ERR;

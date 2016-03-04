@@ -670,7 +670,7 @@ int redisFreeKeepFd(redisContext *c) {
 SOCKET redisFreeKeepFd(redisContext *c)
 {
     SOCKET fd = c->fd;
-    c->fd = -1;
+    c->fd = INVALID_SOCKET;
     redisFree(c);
     return fd;
 }

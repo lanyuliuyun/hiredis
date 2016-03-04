@@ -133,7 +133,7 @@ hiredis-example-qt: examples/example-qt.cpp adapters/qt.h $(STLIBNAME)
 	$(CXX) -o examples/$@ $(REAL_CFLAGS) $(REAL_LDFLAGS) -I. -I$(QT_INCLUDE_DIR) -I$(QT_INCLUDE_DIR)/QtCore -L$(QT_LIBRARY_DIR) qt-adapter-moc.o qt-example-moc.o $< -pthread $(STLIBNAME) -lQtCore
 endif
 
-hiredis-example: examples/example.c $(STLIBNAME)
+example: examples/example.c $(STLIBNAME)
 	$(CC) -o examples/$@ -std=gnu99 $(REAL_CFLAGS) $(REAL_LDFLAGS) -I. $< $(STLIBNAME) -lws2_32
 
 examples: $(EXAMPLES)

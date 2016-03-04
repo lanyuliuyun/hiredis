@@ -15,7 +15,9 @@ int main(int argc, char **argv) {
     const char *hostname = (argc > 1) ? argv[1] : "127.0.0.1";
     int port = (argc > 2) ? atoi(argv[2]) : 6379;
 
+	#if 0
     struct timeval timeout = { 1, 500000 }; // 1.5 seconds
+	#endif
 
   #ifdef __WINNT__
 	WSADATA wsa_data;
@@ -55,11 +57,11 @@ int main(int argc, char **argv) {
     freeReplyObject(reply);
 
     reply = redisCommand(c,"INCR counter");
-    printf("INCR counter: %lld\n", reply->integer);
+    printf("INCR counter: %ld\n", reply->integer);
     freeReplyObject(reply);
     /* again ... */
     reply = redisCommand(c,"INCR counter");
-    printf("INCR counter: %lld\n", reply->integer);
+    printf("INCR counter: %ld\n", reply->integer);
     freeReplyObject(reply);
 
     /* Create a list of numbers, from 0 to 9 */
